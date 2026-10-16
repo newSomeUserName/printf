@@ -110,12 +110,18 @@ int ft_count_special(const char *format)
 	return (spcl_cnt);
 }
 
-void ft_print_str(const char *s)
+int ft_print_str(const char *s)
 {
 	if (s == NULL)
+	{
 		ft_putstr_fd("(null)",1);
+		return (6);
+	}
 	else
+	{
 		ft_putstr_fd((char *)s,1);
+		return ft_strlen(s);
+	}
 }
 
 
@@ -153,18 +159,22 @@ void ft_print_ptr(void *ptr, char c)
 	ft_putnbr_base((unsigned long)ptr, ft_choose_base(c));
 }
 
-void ft_print_param(const char *str, va_list ap)
+int ft_print_param(const char *str, va_list ap)
 {
+	int	result;
+
+	result = 0;
 	if (str[0] == 'd' || str[0] == 'i')
-		ft_putnbr_fd(va_arg(ap, int),1);
+		result = ft_putnbr_base(va_arg(ap, int), ft_choose_base(str[0]));
 	if (str[0] == 's')
-		ft_print_str(va_arg(ap, char *));
+		result = ft_print_str(va_arg(ap, char *));
 	if (str[0] == 'p')
 		ft_print_ptr(va_arg(ap, void *), str[0]);
 	if (str[0] == 'u' || str[0] == 'x' || str[0] == 'X')
-		ft_putnbr_base(va_arg(ap, unsigned int), ft_choose_base(str[0]));
+		result = ft_putnbr_base(va_arg(ap, unsigned int), ft_choose_base(str[0]));
 	if (str[0] == 'c')
 		ft_putchar_fd((char)va_arg(ap, int),1);
+	return (result);
 
 }
 
@@ -197,33 +207,58 @@ int ft_dispatch_str(const char *format, va_list ap)
 
 
 
+// int	ft_printf(const char *format, ...)
+// {
+// 	va_list	ap;
+// 	int	next_step;
+
+// 	va_start(ap, format);
+
+// 	while (*format)
+// 	{
+// 		if (*format == '%')
+// 		{
+// 			next_step = ft_dispatch_str(format, ap);
+// 			if (next_step == -1)
+// 				return (-1);
+// 			format += next_step;
+// 		}
+// 		else
+// 		{
+// 			ft_putchar_fd(*format, 1);
+// 			format++;
+// 		}
+// 	}
+// 	return (0);
+// }
+
+//v2
+
+
+
 int	ft_printf(const char *format, ...)
 {
 	va_list	ap;
-	int	next_step;
+	int	count;
 
+	count = 0;
 	va_start(ap, format);
-
 	while (*format)
 	{
-		if (*format == '%')
+		if (*format && format[1] && *format == '%')
 		{
-			next_step = ft_dispatch_str(format, ap);
-			if (next_step == -1)
-				return (-1);
-			format += next_step;
+			count += ft_print_param(format + 1,ap);
+			format += 2;
 		}
 		else
 		{
-			ft_putchar_fd(*format, 1);
-			format++;
+			ft_putchar_fd(*format++,1);
+			count++;
 		}
+		
 	}
-	return (0);
+	return (count);
 }
-
-
-
 
 // int	ft_printf(const char *format, ...)
 // {
