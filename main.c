@@ -10,10 +10,10 @@ int main(void)
 	int *p = &x;
 	int count;
 	(void)p;
-	count = ft_printf("%X\n%u\n%s\n%p\n%p\n%s\n",170, 0XAA, "FUCK", p, NULL, arr);
+	count = ft_printf("%X\n%u\n%s\n%p\n%p\n%s%%\n",170, 0XAA, "FUCK", p, NULL, arr);
 	ft_printf("%d\n", count);
 	printf("\n-------------\n");
-	printf("%X\n%u\n%s\n%p\n%p\n%s\n",170, 0XAA, "FUCK", p, NULL, arr);
+	printf("%X\n%u\n%s\n%p\n%p\n%s%%\n",170, 0XAA, "FUCK", p, NULL, arr);
 	printf("%d\n", count);
 
 	// ft_printf("%p\n",NULL);
